@@ -1,0 +1,1256 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação técnica de segurança, topologia e camadas de defesa da URA conversacional por voz para avaliação e testes autorizados">
+      
+      
+        <meta name="author" content="Equipe URA Conversacional">
+      
+      
+      
+        <link rel="prev" href="../../superficie-ataque/">
+      
+      
+        <link rel="next" href="../../firewall/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Camadas de Segurança - URA Conversacional (agent-tegma) — Avaliação de Segurança</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-orange" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#camadas-de-seguranca" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../.." title="URA Conversacional (agent-tegma) — Avaliação de Segurança" class="md-header__button md-logo" aria-label="URA Conversacional (agent-tegma) — Avaliação de Segurança" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            URA Conversacional (agent-tegma) — Avaliação de Segurança
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Camadas de Segurança
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-orange" data-md-color-accent="deep-purple"  aria-label="Modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-orange" data-md-color-accent="deep-purple"  aria-label="Modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Apresentação
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../escopo/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Escopo do Sistema
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../arquitetura/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Arquitetura e Topologia
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../fluxo-ligacao/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Fluxo da Ligação (voz)
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../agente/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Agente Conversacional e Guardrails
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../autenticacao/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Validação de Identidade
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../superficie-ataque/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Superfície de Ataque
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Camadas de Segurança
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../firewall/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Firewall e Perímetro
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../autenticacao-seguranca/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Requisitos de Segurança (SEC)
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../avaliacao-seguranca/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Guia para Avaliadores
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="URA Conversacional (agent-tegma) — Avaliação de Segurança" class="md-nav__button md-logo" aria-label="URA Conversacional (agent-tegma) — Avaliação de Segurança" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    URA Conversacional (agent-tegma) — Avaliação de Segurança
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apresentação
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../escopo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Escopo do Sistema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arquitetura/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura e Topologia
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fluxo-ligacao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fluxo da Ligação (voz)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../agente/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agente Conversacional e Guardrails
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../autenticacao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Validação de Identidade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../superficie-ataque/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Superfície de Ataque
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Camadas de Segurança
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Camadas de Segurança
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#visao-geral-defense-in-depth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visão geral — Defense-in-Depth
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#camada-1-firewall-gcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Camada 1 — Firewall GCP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#camada-2-freeswitch-endurecido" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Camada 2 — FreeSWITCH endurecido
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#camada-3-ia-contida-agent-tegma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Camada 3 — IA contida (agent-tegma)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#camada-4-autenticacao-e-rate-limiting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Camada 4 — Autenticação e Rate Limiting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#camada-6-protecao-de-dados-e-lgpd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Camada 6 — Proteção de Dados e LGPD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#postura-de-hardening-estado-atual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Postura de hardening (estado atual)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../firewall/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Firewall e Perímetro
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../autenticacao-seguranca/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Requisitos de Segurança (SEC)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../avaliacao-seguranca/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guia para Avaliadores
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#visao-geral-defense-in-depth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visão geral — Defense-in-Depth
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#camada-1-firewall-gcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Camada 1 — Firewall GCP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#camada-2-freeswitch-endurecido" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Camada 2 — FreeSWITCH endurecido
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#camada-3-ia-contida-agent-tegma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Camada 3 — IA contida (agent-tegma)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#camada-4-autenticacao-e-rate-limiting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Camada 4 — Autenticação e Rate Limiting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#camada-6-protecao-de-dados-e-lgpd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Camada 6 — Proteção de Dados e LGPD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#postura-de-hardening-estado-atual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Postura de hardening (estado atual)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="camadas-de-seguranca">Camadas de Segurança</h1>
+<h2 id="visao-geral-defense-in-depth">Visão geral — Defense-in-Depth</h2>
+<p>O sistema implementa <strong>camadas de segurança independentes</strong>. O comprometimento de uma camada
+isolada não compromete o conjunto — e a camada de IA é contida de forma que nem a manipulação
+do agente alcança identidade, destino do SMS ou credenciais.</p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph L1["Camada 1 — Rede e Firewall GCP"]
+        N1["SSH só via IAP\n35.235.240.0/20"]
+        N2["SIP só faixa operadora\nDatora"]
+        N3["API, Redis, WS, ESL\nem loopback (127.0.0.1)"]
+        N4["Default-allow SSH/RDP\nremovidas"]
+    end
+    subgraph L2["Camada 2 — FreeSWITCH endurecido"]
+        FS1["ESL em 127.0.0.1\n+ senha forte"]
+        FS2["FS_DEFAULT_PASSWORD\ntrocado"]
+        FS3["ACL SIP\nsó operadora"]
+        FS4["epmd confinado\nao loopback"]
+    end
+    subgraph L3["Camada 3 — IA contida (agent-tegma)"]
+        AI1["IA propõe,\nnão executa"]
+        AI2["Lista fechada\nde ferramentas"]
+        AI3["Identidade e SMS\npor DTMF (não pela IA)"]
+        AI4["Guardrails anti-jailbreak\n16/16"]
+    end
+    subgraph L4["Camada 4 — Autenticação e Rate Limiting"]
+        A1["Verificação de RE\n(Cervello, Basic auth)"]
+        A2["Rate limit Redis\npor matrícula+ANI"]
+        A3["Mensagem genérica\nanti-enumeração (SEC-02)"]
+    end
+    subgraph L5["Camada 5 — Aplicação"]
+        AP1["Entrada DTMF\nsó dígitos"]
+        AP2["Backend nunca\nexposto (loopback)"]
+        AP3["Sem exposição de\nversão/ambiente"]
+    end
+    subgraph L6["Camada 6 — Proteção de Dados / LGPD"]
+        D1["PII mascarada\nnos logs"]
+        D2["Matrícula em hash"]
+        D3["Audit append-only"]
+        D4["Senha NUNCA\narmazenada ou enviada"]
+    end
+    subgraph L7["Camada 7 — Segredos"]
+        S1["Secret Manager / .env\nfora do versionamento"]
+        S2["ADC (Google)\nsem chave em disco"]
+    end
+    subgraph L8["Camada 8 — Trânsito e Infra"]
+        T1["SSH via IAP (cifrado)"]
+        T2["Saídas HTTPS\n(Google, Cervello, Twilio)"]
+        T3["Disco GCP\ncifrado em repouso"]
+    end
+    subgraph L9["Camada 9 — Observabilidade"]
+        O1["Cloud Logging (JSON)"]
+        O2["Audit trail de\ncada interação"]
+        O3["Watchdog do tronco\n(auto-recuperação)"]
+    end
+    L1 --&gt; L2 --&gt; L3 --&gt; L4 --&gt; L5 --&gt; L6 --&gt; L7 --&gt; L8 --&gt; L9</code></pre>
+<hr />
+<h2 id="camada-1-firewall-gcp">Camada 1 — Firewall GCP</h2>
+<table>
+<thead>
+<tr>
+<th>Proteção</th>
+<th>Implementação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SSH não exposto</td>
+<td>Porta 22 só do IAP <code>35.235.240.0/20</code>; default-allow-ssh/rdp removidas</td>
+</tr>
+<tr>
+<td>SIP restrito</td>
+<td>5060/5080 só da faixa Datora <code>187.60.60.0/24</code></td>
+</tr>
+<tr>
+<td>API invisível</td>
+<td>FastAPI em <code>127.0.0.1:8010</code> — loopback</td>
+</tr>
+<tr>
+<td>Redis invisível</td>
+<td><code>127.0.0.1:6380</code> — loopback</td>
+</tr>
+<tr>
+<td>Mídia/controle invisível</td>
+<td>mediabridge WS <code>127.0.0.1:8090</code> e ESL <code>127.0.0.1:8021</code> — loopback</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="camada-2-freeswitch-endurecido">Camada 2 — FreeSWITCH endurecido</h2>
+<table>
+<thead>
+<tr>
+<th>Proteção</th>
+<th>Implementação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ESL com senha forte</td>
+<td><code>ESL_PASSWORD</code> via cofre; escuta em <code>127.0.0.1:8021</code></td>
+</tr>
+<tr>
+<td>Credenciais demo removidas</td>
+<td><code>FS_DEFAULT_PASSWORD</code> trocado — bloqueia registro padrão</td>
+</tr>
+<tr>
+<td>ACL de entrada</td>
+<td><code>SIP_INBOUND_ACL</code> — só as faixas da operadora no perfil externo</td>
+</tr>
+<tr>
+<td>Erlang confinado</td>
+<td>epmd restrito ao loopback</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="camada-3-ia-contida-agent-tegma">Camada 3 — IA contida (agent-tegma)</h2>
+<p>A camada nova em relação à URA DTMF. Detalhe completo em
+<a href="../agente/">Agente Conversacional e Guardrails</a>.</p>
+<pre class="mermaid"><code>flowchart LR
+    SP["Fala do chamador"] --&gt; LLM["agent-tegma\n(uma ação por turno,\nlista fechada)"]
+    LLM -- "atender/redirecionar" --&gt; VOZ["Resposta por voz"]
+    LLM -- "executar_reset" --&gt; DET["Backend determinístico\n(DTMF + validação)"]
+    DET --&gt; ST["Resposta ao status\nmontada no servidor"]</code></pre>
+<table>
+<thead>
+<tr>
+<th>Proteção</th>
+<th>Implementação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IA propõe, não executa</td>
+<td>O modelo só escolhe de uma lista fechada; quem executa é o backend</td>
+</tr>
+<tr>
+<td>Sem dígitos para a IA</td>
+<td>Matrícula e celular por DTMF; a IA não os recebe</td>
+</tr>
+<tr>
+<td>Contenção de escopo</td>
+<td>3 desvios consecutivos → transferência (contador no servidor)</td>
+</tr>
+<tr>
+<td>Guardrails</td>
+<td>Bateria multi-turno anti-jailbreak/escopo: 16/16</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="camada-4-autenticacao-e-rate-limiting">Camada 4 — Autenticação e Rate Limiting</h2>
+<pre class="mermaid"><code>flowchart LR
+    CALL["Tentativa de\nvalidação (matrícula)"] --&gt; CTR["Incrementa\nRedis (matrícula+ANI)"]
+    CTR --&gt; MAX{Excedeu a\njanela?}
+    MAX -- Sim --&gt; BLOCK["Bloqueia / transfere"]
+    MAX -- Não --&gt; CV["Verifica na Cervello\n(Basic auth)"]
+    CV --&gt; R{Encontrado?}
+    R -- Não/erro --&gt; GEN["Mensagem genérica (SEC-02)"]
+    R -- Sim --&gt; OK["Segue o fluxo"]</code></pre>
+<hr />
+<h2 id="camada-6-protecao-de-dados-e-lgpd">Camada 6 — Proteção de Dados e LGPD</h2>
+<pre class="mermaid"><code>flowchart LR
+    subgraph IN["Entrada"]
+        MAT["Matrícula"]
+        ANI["Telefone do chamador"]
+        CEL["Celular digitado"]
+    end
+    subgraph PROC["Processamento"]
+        HASH["Hash da matrícula"]
+        MASK["Mascaramento\n(4 últimos dígitos)"]
+    end
+    subgraph ST["Armazenamento"]
+        AUDIT["Auditoria append-only"]
+        NEVER["Senha\nNUNCA armazenada/enviada"]
+    end
+    MAT --&gt; HASH --&gt; AUDIT
+    ANI --&gt; MASK --&gt; AUDIT
+    CEL --&gt; MASK
+    NEVER -. "não existe" .-&gt; AUDIT</code></pre>
+<div class="admonition note">
+<p class="admonition-title">Destino do SMS</p>
+<p>O SMS é enviado ao <strong>celular digitado e confirmado por DTMF</strong> — nunca a um número dito por
+voz e nunca escolhido pela IA. Recomendação de evolução: conferir os últimos dígitos contra
+o celular <strong>cadastrado</strong> antes do envio (2º fator).</p>
+</div>
+<hr />
+<h2 id="postura-de-hardening-estado-atual">Postura de hardening (estado atual)</h2>
+<pre class="mermaid"><code>timeline
+    title Endurecimento aplicado neste ambiente
+    Rede : SIP/RTP só operadora
+         : SSH só IAP
+         : default-allow SSH/RDP removidas
+    Serviços : API, Redis, WS e ESL em loopback
+             : ESL com senha forte; FS_DEFAULT trocado
+    IA : agent-tegma contido (lista fechada; DTMF-only)
+       : guardrails 16/16
+    Operação : watchdog do tronco (auto-recuperação)
+             : segredos em cofre; ADC sem chave</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.suggest", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

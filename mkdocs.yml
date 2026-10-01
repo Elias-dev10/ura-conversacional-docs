@@ -1,0 +1,65 @@
+site_name: URA Conversacional (agent-tegma) — Avaliação de Segurança
+site_description: Documentação técnica de segurança, topologia e camadas de defesa da URA conversacional por voz para avaliação e testes autorizados
+site_author: Equipe URA Conversacional
+
+theme:
+  name: material
+  language: pt-BR
+  palette:
+    - scheme: default
+      primary: deep orange
+      accent: deep purple
+      toggle:
+        icon: material/brightness-7
+        name: Modo escuro
+    - scheme: slate
+      primary: deep orange
+      accent: deep purple
+      toggle:
+        icon: material/brightness-4
+        name: Modo claro
+  font:
+    text: Roboto
+    code: Roboto Mono
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - search.suggest
+    - content.code.copy
+    - content.code.annotate
+
+plugins:
+  - search:
+      lang: pt
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - admonition
+  - tables
+  - attr_list
+  - md_in_html
+
+nav:
+  - Apresentação: index.md
+  - Escopo do Sistema: escopo.md
+  - Arquitetura e Topologia: modelagem/arquitetura.md
+  - Fluxo da Ligação (voz): modelagem/fluxo-ligacao.md
+  - Agente Conversacional e Guardrails: modelagem/agente.md
+  - Validação de Identidade: modelagem/autenticacao.md
+  - Superfície de Ataque: superficie-ataque.md
+  - Camadas de Segurança: modelagem/seguranca.md
+  - Firewall e Perímetro: firewall.md
+  - Requisitos de Segurança (SEC): autenticacao-seguranca.md
+  - Guia para Avaliadores: avaliacao-seguranca.md

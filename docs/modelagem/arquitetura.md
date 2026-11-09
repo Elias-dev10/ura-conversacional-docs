@@ -27,7 +27,7 @@ flowchart TB
         end
 
         SM["Secret Manager\n(cofre de credenciais)"]
-        LOG["Cloud Logging\n+ Monitoring"]
+        LOG["Logs JSON locais\n(rotação, PII mascarada)"]
     end
 
     ADMIN["Operador Admin"] -- "SSH via IAP\n(autenticação Google 2FA)" --> IAP --> FW
@@ -39,7 +39,7 @@ flowchart TB
     MB -- "playback TTS (ESL)" --> FS
     MB -- "HTTPS (ADC)\nfala ⇄ STT/TTS/LLM" --> GOOGLE
 
-    MB -- "HTTP loopback\nexecutar_reset (DTMF)" --> API
+    MB -- "HTTP loopback\nverifica RE / envia SMS\n(dígitos DTMF)" --> API
     API --> REDIS
     API --> PG
     API -- "HTTPS — Basic auth\nverifica RE" --> CERVELLO
@@ -48,8 +48,7 @@ flowchart TB
 
     FS -- "bridge B-leg\nSIP Datora saída" --> DATORA --> ATEND
 
-    SM -- "secrets em runtime" --> API
-    SM -- "secrets em runtime" --> MB
+    SM -- ".env no deploy\n(fora do Git)" --> VM
     VM --> LOG
 ```
 
@@ -82,7 +81,7 @@ flowchart LR
 
     subgraph VM2["VM erika-conv-vm 34.95.240.153"]
         direction TB
-        FS2["FreeSWITCH\n0.0.0.0:5060/5080"]
+        FS2["FreeSWITCH\n5060/5080 (SIP)"]
         MB2["mediabridge (agent-tegma)\n127.0.0.1:8090 (WS)"]
         API2["FastAPI\n127.0.0.1:8010"]
         REDIS2["Redis\n127.0.0.1:6380"]
@@ -101,11 +100,11 @@ flowchart LR
 
 | Componente | Função | Escuta em | Acessível externamente? |
 |---|---|---|---|
-| **FreeSWITCH** | Telefonia — atende SIP, mídia RTP, `mod_audio_stream`, bridge | `0.0.0.0:5060/5080` (SIP) | Apenas da faixa Datora |
-| **mediabridge (agent-tegma)** | Ponte de mídia + agente: STT, LLM, TTS, ESL; WebSocket de áudio | `127.0.0.1:8090` (WS) · ESL `127.0.0.1:8021` | **Não** |
-| **FastAPI** | Executor das ações — valida RE, rate limit, envia o link | `127.0.0.1:8010` | **Não** |
+| **FreeSWITCH** | Telefonia — atende SIP, mídia RTP, `mod_audio_stream`, bridge | `10.60.0.2:5060/5080` (SIP, via NAT do IP público) | Apenas da faixa Datora |
+| **mediabridge (agent-tegma)** | Ponte de mídia + agente: STT, LLM, TTS; coleta DTMF via ESL | `127.0.0.1:8090` (WS) · ESL `127.0.0.1:8021` | **Não** |
+| **FastAPI** | Executor das ações — valida RE, rate limit, envia o link, auditoria | `127.0.0.1:8010` | **Não** |
 | **Redis** | Rate limiting + estado efêmero | `127.0.0.1:6380` | **Não** |
-| **PostgreSQL** | Auditoria imutável | interno | **Não** |
+| **PostgreSQL** | Auditoria append-only (`audit_log`) | `127.0.0.1:5433` | **Não** |
 
 ---
 
@@ -114,9 +113,11 @@ flowchart LR
 O design segue a **separação estrita** — reforçada pela regra de ouro da camada de IA:
 
 - **FreeSWITCH** atende a ligação e transporta a mídia — **não toma decisões**.
-- **mediabridge / agent-tegma** conduz a conversa (STT→LLM→TTS) e **propõe** ações de uma lista
-  fechada — **não executa** nem recebe os dígitos sensíveis.
-- **FastAPI** toma e executa as decisões (valida RE, coleta DTMF, envia o link) — **nunca exposto**.
+- **mediabridge / agent-tegma** conduz a conversa (STT→LLM→TTS); o **modelo** só **propõe**
+  ações de uma lista fechada e **nunca recebe** os dígitos sensíveis. Na ação `executar_reset`,
+  código determinístico do mediabridge (fora da IA) **coleta matrícula e celular por DTMF** via ESL.
+- **FastAPI** valida e executa (verifica o RE, aplica rate limit, envia o link, registra a
+  auditoria) — **nunca exposto**.
 - **Redis** guarda estado temporário com TTL — **sem PII persistida**.
 - **PostgreSQL** registra auditoria imutável — **matrícula apenas em hash**.
 

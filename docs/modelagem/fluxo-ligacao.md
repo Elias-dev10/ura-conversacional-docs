@@ -17,13 +17,15 @@ sequenceDiagram
     MB->>C: Saudação (TTS) — "Como posso ajudar?"
     C->>MB: Fala o pedido (reset de senha)
     MB->>MB: STT + LLM — decide seguir o fluxo (interno/terceirizado)
-    MB->>API: executar_reset (ação determinística)
-    API->>C: "Digite a matrícula" (coleta DTMF)
-    C-->>API: Matrícula (teclado)
+    MB->>MB: LLM escolhe executar_reset (daqui em diante, código determinístico)
+    MB->>C: "Digite a matrícula" (coleta DTMF via ESL)
+    C-->>MB: Matrícula (teclado)
+    MB->>API: verificar_matricula (matrícula, ANI, call_uuid)
     API->>CV: Verifica RE (HTTPS, Basic auth)
     CV-->>API: Nome + e-mail (campo "Login")
-    API->>C: "Digite o celular" + confirmação (DTMF)
-    C-->>API: Celular (teclado) → confirma
+    MB->>C: "Digite o celular" + confirmação (DTMF)
+    C-->>MB: Celular (teclado) → confirma
+    MB->>API: enviar_sms (mesmo call_uuid)
     API->>TW: Envia link SSPR
     TW-->>C: SMS com o link oficial Microsoft
     MB->>C: "Link enviado. Precisa de mais algo?" (TTS)
@@ -40,8 +42,8 @@ sequenceDiagram
 | 3 | Conversa (STT/LLM/TTS) | A IA só recebe **fala**; escolhe ações de uma **lista fechada**; guardrails anti-jailbreak |
 | 4 | Coleta de matrícula | **DTMF**, não voz; validada no backend; rate limit por matrícula+ANI |
 | 5 | Verificação de identidade | Cervello via **HTTPS + Basic auth**; mensagem genérica em erro (anti-enumeração) |
-| 6 | Coleta/confirmação do celular | **DTMF**; confirmação dos últimos dígitos; nunca aceita número por voz |
-| 7 | Envio do link | **Só o link** do portal Microsoft SSPR (SEC-01); nunca a senha |
+| 6 | Coleta/confirmação do celular | **DTMF**; celular BR de 11 dígitos; confirmação dos últimos dígitos; nunca aceita número por voz |
+| 7 | Envio do link | **Só o link** do portal Microsoft SSPR (SEC-01), nunca a senha; só para a matrícula **verificada na mesma ligação**; **1 SMS por ligação** + limite por matrícula/ANI; registrado na auditoria |
 | 8 | Encerramento/fim | Resposta de sucesso **determinística** no servidor (não deixada à IA) |
 
 ---

@@ -7,10 +7,10 @@ específicos da camada conversacional (agent-tegma).
 |---|---|---|---|
 | **SEC-01** | Nunca envia senha | Apenas o link oficial do portal Microsoft SSPR | Interceptar o SMS recebido |
 | **SEC-02** | Mensagem genérica de erro | Mesma resposta, independente do motivo da falha | Testar matrículas válidas e inválidas |
-| **SEC-03** | Rate limiting | Redis por matrícula+ANI; bloqueio ao exceder a janela | Repetir várias validações no mesmo ANI |
-| **SEC-04** | Registro de ANI | Número de origem auditado; spoof não concede acesso extra | Analisar a auditoria |
-| **SEC-05** | Link com expiração | Token efêmero (TTL) de controle; novo envio invalida o anterior | Reutilizar link após expirar |
-| **SEC-06** | Auditoria imutável | Append-only; matrícula em hash; PII mascarada | Verificar o schema/fluxo de auditoria |
+| **SEC-03** | Rate limiting | Redis por matrícula+ANI; bloqueio ao exceder a janela. SMS só para a matrícula **verificada na mesma ligação**, **1 SMS por ligação** e teto por matrícula e por ANI na janela | Repetir validações no mesmo ANI; tentar um 2º envio na mesma ligação |
+| **SEC-04** | Registro de ANI | Número de origem registrado na auditoria **mascarado** (só os 4 últimos dígitos); spoof não concede acesso extra | Analisar a auditoria |
+| **SEC-05** | Link oficial, sem segredo próprio | O SMS traz só o endereço do portal SSPR da Microsoft com o login pré-preenchido; não há token nosso no link. Sessão, expiração e fatores de verificação são do portal da Microsoft | Abrir o link: o reset só conclui após a verificação da Microsoft |
+| **SEC-06** | Auditoria imutável | Append-only (`audit_log`): verificação e envio por ligação; matrícula em hash salgado; ANI e destino mascarados; logs sem PII | Verificar o schema/fluxo de auditoria |
 | **SEC-07** | Segredos fora do código | Cofre/`.env` não versionado; ADC sem chave em disco | `grep -ri "password\|secret\|token\|api[_-]key" .` no repositório |
 | **SEC-08** | Menor privilégio | Escopos mínimos (ADC `aiplatform.user`; Cervello só verificação de RE) | Verificar permissões das credenciais |
 | **SEC-09** | Sem reset administrativo | Apenas link SSPR oficial; sem senha temporária | Analisar o código do fluxo de reset |

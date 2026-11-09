@@ -8,7 +8,7 @@ na base de identidade do cliente através da **API Macro da Cervello**.
 ```mermaid
 flowchart TB
     MAT["Matrícula digitada\n(DTMF — nunca por voz)"] --> API["FastAPI\nverificar_matricula"]
-    API --> RL{Rate limit\n(matrícula + ANI)}
+    API --> RL{"Rate limit\n(matrícula + ANI)"}
     RL -- "excedeu" --> BLK["Bloqueia / transfere"]
     RL -- "ok" --> CV["Cervello — API Macro\nPOST ExecutaMacroFuncao\nHTTPS + Basic auth"]
     CV --> R{Encontrado?}

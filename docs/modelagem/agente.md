@@ -11,7 +11,7 @@ flowchart LR
     SPEECH["Fala do chamador\n(só texto da fala)"] --> LLM["agent-tegma (LLM)\nescolhe UMA ação\nde uma lista fechada"]
     LLM --> ROUTE{Ação}
     ROUTE -- "atender" --> SAY["Fala de atendimento\n(TTS)"]
-    ROUTE -- "executar_reset" --> DET["Backend determinístico\ncoleta DTMF + valida + envia"]
+    ROUTE -- "executar_reset" --> DET["Execução determinística\ncoleta DTMF + valida + envia"]
     ROUTE -- "reforcar_escopo" --> RED["Redireciona (fora de escopo)"]
     ROUTE -- "transferir_atendente" --> TR["Transfere ao plantão"]
     ROUTE -- "encerrar" --> END["Encerra"]
@@ -21,7 +21,9 @@ flowchart LR
 - O modelo é **obrigado a chamar uma ferramenta por turno** (function calling em modo restrito)
   — não há “texto livre” que escape do roteamento.
 - A **lista de ferramentas é fechada**: `atender`, `executar_reset`, `reforcar_escopo`,
-  `transferir_atendente`, `encerrar`. Nada além disso.
+  `transferir_atendente`, `encerrar`. Nada além disso: a restrição é aplicada na própria API do
+  modelo, e qualquer outra ferramenta (ou resposta vazia) é descartada e regenerada; se persistir,
+  conta como desvio de escopo — nunca escapa do contador.
 - `executar_reset` é **determinístico**: coleta matrícula e celular por **DTMF**, valida no
   backend e envia o link. A IA **não recebe os dígitos** e **não decide** o destino do SMS.
 - A **resposta ao resultado** (enviado / não encontrado / falha) é montada **pelo servidor**,

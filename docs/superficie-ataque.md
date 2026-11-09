@@ -54,4 +54,5 @@ O vetor de maior interesse é a própria URA, via ligação:
   sem vazar prompt e sem efeito sobre identidade/SMS.
 - **Número/matrícula por voz** → ignorado; coleta é só DTMF.
 - **Enumeração de matrícula** → mensagem genérica + rate limit.
-- **Abuso de SMS** → rate limit por matrícula+ANI; corpo do SMS traz só o link oficial.
+- **Abuso de SMS** → SMS só para matrícula verificada na mesma ligação, 1 por ligação e teto por
+  matrícula+ANI; corpo do SMS traz só o link oficial.

@@ -7,7 +7,8 @@
 | SIP operadora | entrada | `tcp/udp 5060, 5080` | Datora `187.60.60.0/24` | ALLOW |
 | RTP (mídia) | entrada | `udp 16384-32768` | Faixa Datora `187.60.60.0/24` | ALLOW |
 | SSH via IAP | entrada | `tcp 22` | IAP Google `35.235.240.0/20` | ALLOW |
-| SNMP/RPC | entrada | `udp 161` / RPC | qualquer | DENY (explícito) |
+| Softphone de teste (temporária) | entrada | `tcp/udp 5060, 5080` · `udp 16384-32768` | 2 IPs `/32` autorizados pela equipe | ALLOW — removida ao fim da validação |
+| SNMP/RPC | entrada | `tcp/udp 161, 111` | qualquer | DENY (explícito, prioridade 100) |
 | Default aberto (SSH/RDP) | entrada | `tcp 22 / 3389` | `0.0.0.0/0` | **REMOVIDA** |
 | Demais | entrada | qualquer | qualquer | DENY (padrão) |
 

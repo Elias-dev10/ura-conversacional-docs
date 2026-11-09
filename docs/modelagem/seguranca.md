@@ -43,7 +43,7 @@ flowchart TB
         D4["Senha NUNCA\narmazenada ou enviada"]
     end
     subgraph L7["Camada 7 — Segredos"]
-        S1["Secret Manager / .env\nfora do versionamento"]
+        S1["Secret Manager → .env no deploy\nfora do versionamento"]
         S2["ADC (Google)\nsem chave em disco"]
     end
     subgraph L8["Camada 8 — Trânsito e Infra"]
@@ -52,7 +52,7 @@ flowchart TB
         T3["Disco GCP\ncifrado em repouso"]
     end
     subgraph L9["Camada 9 — Observabilidade"]
-        O1["Cloud Logging (JSON)"]
+        O1["Logs JSON locais\n(rotação, sem PII)"]
         O2["Audit trail de\ncada interação"]
         O3["Watchdog do tronco\n(auto-recuperação)"]
     end

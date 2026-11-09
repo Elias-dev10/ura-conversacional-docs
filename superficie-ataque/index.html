@@ -1032,7 +1032,8 @@ discar o DID e exercitar a URA (guardrails, DTMF, injeção por voz). Veja
   sem vazar prompt e sem efeito sobre identidade/SMS.</li>
 <li><strong>Número/matrícula por voz</strong> → ignorado; coleta é só DTMF.</li>
 <li><strong>Enumeração de matrícula</strong> → mensagem genérica + rate limit.</li>
-<li><strong>Abuso de SMS</strong> → rate limit por matrícula+ANI; corpo do SMS traz só o link oficial.</li>
+<li><strong>Abuso de SMS</strong> → SMS só para matrícula verificada na mesma ligação, 1 por ligação e teto por
+  matrícula+ANI; corpo do SMS traz só o link oficial.</li>
 </ul>
 
 

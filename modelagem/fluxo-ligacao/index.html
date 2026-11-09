@@ -920,13 +920,15 @@
     MB-&gt;&gt;C: Saudação (TTS) — "Como posso ajudar?"
     C-&gt;&gt;MB: Fala o pedido (reset de senha)
     MB-&gt;&gt;MB: STT + LLM — decide seguir o fluxo (interno/terceirizado)
-    MB-&gt;&gt;API: executar_reset (ação determinística)
-    API-&gt;&gt;C: "Digite a matrícula" (coleta DTMF)
-    C--&gt;&gt;API: Matrícula (teclado)
+    MB-&gt;&gt;MB: LLM escolhe executar_reset (daqui em diante, código determinístico)
+    MB-&gt;&gt;C: "Digite a matrícula" (coleta DTMF via ESL)
+    C--&gt;&gt;MB: Matrícula (teclado)
+    MB-&gt;&gt;API: verificar_matricula (matrícula, ANI, call_uuid)
     API-&gt;&gt;CV: Verifica RE (HTTPS, Basic auth)
     CV--&gt;&gt;API: Nome + e-mail (campo "Login")
-    API-&gt;&gt;C: "Digite o celular" + confirmação (DTMF)
-    C--&gt;&gt;API: Celular (teclado) → confirma
+    MB-&gt;&gt;C: "Digite o celular" + confirmação (DTMF)
+    C--&gt;&gt;MB: Celular (teclado) → confirma
+    MB-&gt;&gt;API: enviar_sms (mesmo call_uuid)
     API-&gt;&gt;TW: Envia link SSPR
     TW--&gt;&gt;C: SMS com o link oficial Microsoft
     MB-&gt;&gt;C: "Link enviado. Precisa de mais algo?" (TTS)</code></pre>
@@ -969,12 +971,12 @@
 <tr>
 <td>6</td>
 <td>Coleta/confirmação do celular</td>
-<td><strong>DTMF</strong>; confirmação dos últimos dígitos; nunca aceita número por voz</td>
+<td><strong>DTMF</strong>; celular BR de 11 dígitos; confirmação dos últimos dígitos; nunca aceita número por voz</td>
 </tr>
 <tr>
 <td>7</td>
 <td>Envio do link</td>
-<td><strong>Só o link</strong> do portal Microsoft SSPR (SEC-01); nunca a senha</td>
+<td><strong>Só o link</strong> do portal Microsoft SSPR (SEC-01), nunca a senha; só para a matrícula <strong>verificada na mesma ligação</strong>; <strong>1 SMS por ligação</strong> + limite por matrícula/ANI; registrado na auditoria</td>
 </tr>
 <tr>
 <td>8</td>

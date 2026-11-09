@@ -952,7 +952,7 @@
         end
 
         SM["Secret Manager\n(cofre de credenciais)"]
-        LOG["Cloud Logging\n+ Monitoring"]
+        LOG["Logs JSON locais\n(rotação, PII mascarada)"]
     end
 
     ADMIN["Operador Admin"] -- "SSH via IAP\n(autenticação Google 2FA)" --&gt; IAP --&gt; FW
@@ -964,7 +964,7 @@
     MB -- "playback TTS (ESL)" --&gt; FS
     MB -- "HTTPS (ADC)\nfala ⇄ STT/TTS/LLM" --&gt; GOOGLE
 
-    MB -- "HTTP loopback\nexecutar_reset (DTMF)" --&gt; API
+    MB -- "HTTP loopback\nverifica RE / envia SMS\n(dígitos DTMF)" --&gt; API
     API --&gt; REDIS
     API --&gt; PG
     API -- "HTTPS — Basic auth\nverifica RE" --&gt; CERVELLO
@@ -973,8 +973,7 @@
 
     FS -- "bridge B-leg\nSIP Datora saída" --&gt; DATORA --&gt; ATEND
 
-    SM -- "secrets em runtime" --&gt; API
-    SM -- "secrets em runtime" --&gt; MB
+    SM -- ".env no deploy\n(fora do Git)" --&gt; VM
     VM --&gt; LOG</code></pre>
 <div class="admonition note">
 <p class="admonition-title">A regra de ouro desta arquitetura</p>
@@ -1003,7 +1002,7 @@ SMS. Logo, não há caminho para <em>prompt injection</em> redirecionar o reset.
 
     subgraph VM2["VM erika-conv-vm 34.95.240.153"]
         direction TB
-        FS2["FreeSWITCH\n0.0.0.0:5060/5080"]
+        FS2["FreeSWITCH\n5060/5080 (SIP)"]
         MB2["mediabridge (agent-tegma)\n127.0.0.1:8090 (WS)"]
         API2["FastAPI\n127.0.0.1:8010"]
         REDIS2["Redis\n127.0.0.1:6380"]
@@ -1029,18 +1028,18 @@ SMS. Logo, não há caminho para <em>prompt injection</em> redirecionar o reset.
 <tr>
 <td><strong>FreeSWITCH</strong></td>
 <td>Telefonia — atende SIP, mídia RTP, <code>mod_audio_stream</code>, bridge</td>
-<td><code>0.0.0.0:5060/5080</code> (SIP)</td>
+<td><code>10.60.0.2:5060/5080</code> (SIP, via NAT do IP público)</td>
 <td>Apenas da faixa Datora</td>
 </tr>
 <tr>
 <td><strong>mediabridge (agent-tegma)</strong></td>
-<td>Ponte de mídia + agente: STT, LLM, TTS, ESL; WebSocket de áudio</td>
+<td>Ponte de mídia + agente: STT, LLM, TTS; coleta DTMF via ESL</td>
 <td><code>127.0.0.1:8090</code> (WS) · ESL <code>127.0.0.1:8021</code></td>
 <td><strong>Não</strong></td>
 </tr>
 <tr>
 <td><strong>FastAPI</strong></td>
-<td>Executor das ações — valida RE, rate limit, envia o link</td>
+<td>Executor das ações — valida RE, rate limit, envia o link, auditoria</td>
 <td><code>127.0.0.1:8010</code></td>
 <td><strong>Não</strong></td>
 </tr>
@@ -1052,8 +1051,8 @@ SMS. Logo, não há caminho para <em>prompt injection</em> redirecionar o reset.
 </tr>
 <tr>
 <td><strong>PostgreSQL</strong></td>
-<td>Auditoria imutável</td>
-<td>interno</td>
+<td>Auditoria append-only (<code>audit_log</code>)</td>
+<td><code>127.0.0.1:5433</code></td>
 <td><strong>Não</strong></td>
 </tr>
 </tbody>
@@ -1063,9 +1062,11 @@ SMS. Logo, não há caminho para <em>prompt injection</em> redirecionar o reset.
 <p>O design segue a <strong>separação estrita</strong> — reforçada pela regra de ouro da camada de IA:</p>
 <ul>
 <li><strong>FreeSWITCH</strong> atende a ligação e transporta a mídia — <strong>não toma decisões</strong>.</li>
-<li><strong>mediabridge / agent-tegma</strong> conduz a conversa (STT→LLM→TTS) e <strong>propõe</strong> ações de uma lista
-  fechada — <strong>não executa</strong> nem recebe os dígitos sensíveis.</li>
-<li><strong>FastAPI</strong> toma e executa as decisões (valida RE, coleta DTMF, envia o link) — <strong>nunca exposto</strong>.</li>
+<li><strong>mediabridge / agent-tegma</strong> conduz a conversa (STT→LLM→TTS); o <strong>modelo</strong> só <strong>propõe</strong>
+  ações de uma lista fechada e <strong>nunca recebe</strong> os dígitos sensíveis. Na ação <code>executar_reset</code>,
+  código determinístico do mediabridge (fora da IA) <strong>coleta matrícula e celular por DTMF</strong> via ESL.</li>
+<li><strong>FastAPI</strong> valida e executa (verifica o RE, aplica rate limit, envia o link, registra a
+  auditoria) — <strong>nunca exposto</strong>.</li>
 <li><strong>Redis</strong> guarda estado temporário com TTL — <strong>sem PII persistida</strong>.</li>
 <li><strong>PostgreSQL</strong> registra auditoria imutável — <strong>matrícula apenas em hash</strong>.</li>
 </ul>

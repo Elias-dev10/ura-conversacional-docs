@@ -939,11 +939,18 @@
 <td>ALLOW</td>
 </tr>
 <tr>
+<td>Softphone de teste (temporária)</td>
+<td>entrada</td>
+<td><code>tcp/udp 5060, 5080</code> · <code>udp 16384-32768</code></td>
+<td>2 IPs <code>/32</code> autorizados pela equipe</td>
+<td>ALLOW — removida ao fim da validação</td>
+</tr>
+<tr>
 <td>SNMP/RPC</td>
 <td>entrada</td>
-<td><code>udp 161</code> / RPC</td>
+<td><code>tcp/udp 161, 111</code></td>
 <td>qualquer</td>
-<td>DENY (explícito)</td>
+<td>DENY (explícito, prioridade 100)</td>
 </tr>
 <tr>
 <td>Default aberto (SSH/RDP)</td>

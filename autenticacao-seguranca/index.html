@@ -888,25 +888,25 @@ específicos da camada conversacional (agent-tegma).</p>
 <tr>
 <td><strong>SEC-03</strong></td>
 <td>Rate limiting</td>
-<td>Redis por matrícula+ANI; bloqueio ao exceder a janela</td>
-<td>Repetir várias validações no mesmo ANI</td>
+<td>Redis por matrícula+ANI; bloqueio ao exceder a janela. SMS só para a matrícula <strong>verificada na mesma ligação</strong>, <strong>1 SMS por ligação</strong> e teto por matrícula e por ANI na janela</td>
+<td>Repetir validações no mesmo ANI; tentar um 2º envio na mesma ligação</td>
 </tr>
 <tr>
 <td><strong>SEC-04</strong></td>
 <td>Registro de ANI</td>
-<td>Número de origem auditado; spoof não concede acesso extra</td>
+<td>Número de origem registrado na auditoria <strong>mascarado</strong> (só os 4 últimos dígitos); spoof não concede acesso extra</td>
 <td>Analisar a auditoria</td>
 </tr>
 <tr>
 <td><strong>SEC-05</strong></td>
-<td>Link com expiração</td>
-<td>Token efêmero (TTL) de controle; novo envio invalida o anterior</td>
-<td>Reutilizar link após expirar</td>
+<td>Link oficial, sem segredo próprio</td>
+<td>O SMS traz só o endereço do portal SSPR da Microsoft com o login pré-preenchido; não há token nosso no link. Sessão, expiração e fatores de verificação são do portal da Microsoft</td>
+<td>Abrir o link: o reset só conclui após a verificação da Microsoft</td>
 </tr>
 <tr>
 <td><strong>SEC-06</strong></td>
 <td>Auditoria imutável</td>
-<td>Append-only; matrícula em hash; PII mascarada</td>
+<td>Append-only (<code>audit_log</code>): verificação e envio por ligação; matrícula em hash salgado; ANI e destino mascarados; logs sem PII</td>
 <td>Verificar o schema/fluxo de auditoria</td>
 </tr>
 <tr>

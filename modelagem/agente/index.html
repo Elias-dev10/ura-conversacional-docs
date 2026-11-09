@@ -935,7 +935,7 @@ informação.</p>
     SPEECH["Fala do chamador\n(só texto da fala)"] --&gt; LLM["agent-tegma (LLM)\nescolhe UMA ação\nde uma lista fechada"]
     LLM --&gt; ROUTE{Ação}
     ROUTE -- "atender" --&gt; SAY["Fala de atendimento\n(TTS)"]
-    ROUTE -- "executar_reset" --&gt; DET["Backend determinístico\ncoleta DTMF + valida + envia"]
+    ROUTE -- "executar_reset" --&gt; DET["Execução determinística\ncoleta DTMF + valida + envia"]
     ROUTE -- "reforcar_escopo" --&gt; RED["Redireciona (fora de escopo)"]
     ROUTE -- "transferir_atendente" --&gt; TR["Transfere ao plantão"]
     ROUTE -- "encerrar" --&gt; END["Encerra"]
@@ -944,7 +944,9 @@ informação.</p>
 <li>O modelo é <strong>obrigado a chamar uma ferramenta por turno</strong> (function calling em modo restrito)
   — não há “texto livre” que escape do roteamento.</li>
 <li>A <strong>lista de ferramentas é fechada</strong>: <code>atender</code>, <code>executar_reset</code>, <code>reforcar_escopo</code>,
-  <code>transferir_atendente</code>, <code>encerrar</code>. Nada além disso.</li>
+  <code>transferir_atendente</code>, <code>encerrar</code>. Nada além disso: a restrição é aplicada na própria API do
+  modelo, e qualquer outra ferramenta (ou resposta vazia) é descartada e regenerada; se persistir,
+  conta como desvio de escopo — nunca escapa do contador.</li>
 <li><code>executar_reset</code> é <strong>determinístico</strong>: coleta matrícula e celular por <strong>DTMF</strong>, valida no
   backend e envia o link. A IA <strong>não recebe os dígitos</strong> e <strong>não decide</strong> o destino do SMS.</li>
 <li>A <strong>resposta ao resultado</strong> (enviado / não encontrado / falha) é montada <strong>pelo servidor</strong>,

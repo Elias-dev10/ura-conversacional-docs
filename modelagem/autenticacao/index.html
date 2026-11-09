@@ -910,7 +910,7 @@
 na base de identidade do cliente através da <strong>API Macro da Cervello</strong>.</p>
 <pre class="mermaid"><code>flowchart TB
     MAT["Matrícula digitada\n(DTMF — nunca por voz)"] --&gt; API["FastAPI\nverificar_matricula"]
-    API --&gt; RL{Rate limit\n(matrícula + ANI)}
+    API --&gt; RL{"Rate limit\n(matrícula + ANI)"}
     RL -- "excedeu" --&gt; BLK["Bloqueia / transfere"]
     RL -- "ok" --&gt; CV["Cervello — API Macro\nPOST ExecutaMacroFuncao\nHTTPS + Basic auth"]
     CV --&gt; R{Encontrado?}
